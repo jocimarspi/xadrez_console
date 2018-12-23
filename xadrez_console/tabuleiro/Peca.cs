@@ -13,6 +13,11 @@
             Cor = cor;
             Tabuleiro = tabuleiro;
             QuantidadeMovimentos = 0;
-        }       
+        }      
+        
+        public int IncrementarQuantidadeMovimentos()
+        {
+            return QuantidadeMovimentos++;
+        }
     }
 }
