@@ -48,7 +48,7 @@
 
         public bool PosicaoValida(Posicao posicao)
         {
-            return (posicao.Linha >= 0) && (posicao.Coluna >= 0) && (posicao.Linha <= Linhas) && (posicao.Coluna <= Colunas);
+            return (posicao.Linha >= 0) && (posicao.Coluna >= 0) && (posicao.Linha < Linhas) && (posicao.Coluna < Colunas);
         }
 
         public void ValidarPosicao(Posicao posicao)

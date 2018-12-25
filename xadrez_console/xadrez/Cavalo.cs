@@ -10,6 +10,11 @@ namespace xadrez
 
         }
 
+        public override bool[,] RetornarMovimetacoesPossiveis()
+        {
+            return new bool[Tabuleiro.Linhas, Tabuleiro.Colunas];
+        }
+
         public override string ToString()
         {
             return "C";
