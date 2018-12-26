@@ -5,7 +5,7 @@ namespace xadrez
     class PartidaDeXadrez
     {
         public Tabuleiro Tabuleiro { get; private set; }
-        public int Turno { get; set; }
+        public int Turno { get; private set; }
         public Cor JogadaAtual { get; set; }
         public bool Terminada { get; set; }
 
@@ -19,6 +19,28 @@ namespace xadrez
             iniciarTabuleiro();
         }
 
+        public void ValidarPosicaoOrigem(Posicao origem)
+        {
+            Tabuleiro.ValidarPosicao(origem);
+
+            Peca peca = Tabuleiro.peca(origem);
+
+            if (peca == null)
+            {
+                throw new TabuleiroException("Não existe peça na possição de origem escolhida.");
+            }            
+
+            if (JogadaAtual != peca.Cor)
+            {
+                throw new TabuleiroException("A peça de origem escolhida não é sua.");
+            }
+
+            if (!peca.ExisteMovimentosPossiveis())
+            {
+                throw new TabuleiroException("Não existe movimentos possíveis para peça de origem escolhida.");
+            }
+        }
+
         public void ExecutarMovimento(Posicao origem, Posicao destino)
         {
             Peca pecaMovida = Tabuleiro.RetirarPecao(origem);
@@ -26,6 +48,26 @@ namespace xadrez
             Peca pecaCapturada = Tabuleiro.RetirarPecao(destino);
             Tabuleiro.ColocarPeca(pecaMovida, destino);
         }
+
+        public void MudarJogada()
+        {
+            JogadaAtual = JogadaAtual == Cor.Branca ? Cor.Preta : Cor.Branca;
+        }
+
+        public void RealizarJogada(Posicao origem, Posicao destino)
+        {
+            ExecutarMovimento(origem, destino);
+            MudarJogada();
+            Turno++;
+        }
+
+        public void ValidarPosicaoDestino(Posicao origem, Posicao destino)
+        {
+            if (!Tabuleiro.peca(origem).PodeMoverPara(destino))
+            {
+                throw new TabuleiroException("Posição de destino inválida.");
+            }
+        }            
 
         private void iniciarPecasBrancas()
         {

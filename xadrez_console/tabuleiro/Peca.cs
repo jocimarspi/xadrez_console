@@ -13,11 +13,32 @@
             Cor = cor;
             Tabuleiro = tabuleiro;
             QuantidadeMovimentos = 0;
-        }      
-        
+        }
+
         public int IncrementarQuantidadeMovimentos()
         {
             return QuantidadeMovimentos++;
+        }
+
+        public bool ExisteMovimentosPossiveis()
+        {
+            bool[,] movimentosPossiveis = RetornarMovimetacoesPossiveis();
+
+            for (int linha = 0; linha < Tabuleiro.Linhas; linha++)
+            {
+                for (int coluna = 0; coluna < Tabuleiro.Colunas; coluna++)
+                {
+                    if (movimentosPossiveis[linha, coluna])
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool PodeMoverPara(Posicao pos)
+        {
+            return RetornarMovimetacoesPossiveis()[pos.Linha, pos.Coluna];
         }
 
         public abstract bool[,] RetornarMovimetacoesPossiveis();
