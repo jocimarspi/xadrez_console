@@ -19,11 +19,7 @@ namespace xadrez_console
                     {
                         Console.Clear();
 
-                        Tela.ImprimirTabuleiro(partida.Tabuleiro);
-
-                        Console.WriteLine();
-                        Console.WriteLine("Turno: " + partida.Turno);
-                        Console.WriteLine("Aguardando jogada das peças: " + partida.JogadaAtual);
+                        Tela.ImprimirPartida(partida);
 
                         Console.WriteLine();
 
@@ -34,7 +30,7 @@ namespace xadrez_console
                         bool[,] movimentosPossiveis = partida.Tabuleiro.peca(origem).RetornarMovimetacoesPossiveis();
 
                         Console.Clear();
-                        Tela.ImprimirTabuleiro(partida.Tabuleiro, movimentosPossiveis);
+                        Tela.ImprimirPartida(partida, movimentosPossiveis);
 
                         Console.WriteLine();
                         Console.Write("Destino: ");

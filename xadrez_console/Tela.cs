@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using tabuleiro;
 using xadrez;
 
@@ -44,7 +45,7 @@ namespace xadrez_console
                 {
                     imprimirCasaVazia();
                     return;
-                }                
+                }
 
                 if (peca.Cor == Cor.Branca)
                     imprimirPecaBranca(peca);
@@ -89,6 +90,62 @@ namespace xadrez_console
             int linha = (int)char.GetNumericValue(posicaoInformada[1]);
 
             return new PosicaoXadrez(coluna, linha);
+        }
+
+        public static void ImprimirConjunto(HashSet<Peca> conjunto)
+        {
+            foreach (Peca p in conjunto)
+            {
+                Console.Write(p + " ");
+            }
+
+        }
+
+        public static void ImprimirPecasCapturadasBrancas(PartidaDeXadrez partida)
+        {
+            Console.Write("Brancas: ");
+            Console.Write("[");
+
+            ImprimirConjunto(partida.PecasCapturadas(Cor.Branca));
+
+            Console.WriteLine("]");
+        }
+
+        public static void ImprimirPecasCapturadasPretas(PartidaDeXadrez partida)
+        {            
+            Console.Write("Pretas: ");
+            Console.Write("[");
+            ConsoleColor corFonteAnterior = Console.ForegroundColor;
+            Console.ForegroundColor = ConsoleColor.Yellow;
+
+            ImprimirConjunto(partida.PecasCapturadas(Cor.Preta));
+
+            Console.ForegroundColor = corFonteAnterior;
+            Console.WriteLine("]");
+        }
+
+        public static void ImprimirPecasCapturadas(PartidaDeXadrez partida)
+        {
+            Console.WriteLine("Peças capturadas: ");
+            
+            ImprimirPecasCapturadasBrancas(partida);            
+            ImprimirPecasCapturadasPretas(partida);
+        }
+
+        public static void ImprimirPartida(PartidaDeXadrez partida, bool [,] movimentosPossiveis)
+        {
+            ImprimirTabuleiro(partida.Tabuleiro, movimentosPossiveis);
+
+            Console.WriteLine();
+            ImprimirPecasCapturadas(partida);
+            Console.WriteLine();
+            Console.WriteLine("Turno: " + partida.Turno);
+            Console.WriteLine("Aguardando jogada das peças: " + partida.JogadaAtual);
+        }
+
+        public static void ImprimirPartida(PartidaDeXadrez partida)
+        {
+            ImprimirPartida(partida, null);
         }
     }
 }
