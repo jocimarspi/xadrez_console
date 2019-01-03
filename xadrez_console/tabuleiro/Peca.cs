@@ -20,6 +20,11 @@
             return QuantidadeMovimentos++;
         }
 
+        public int  DecrementarQuantidadeMovimentos()
+        {
+            return QuantidadeMovimentos--;
+        }
+
         public bool ExisteMovimentosPossiveis()
         {
             bool[,] movimentosPossiveis = RetornarMovimetacoesPossiveis();

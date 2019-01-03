@@ -112,7 +112,7 @@ namespace xadrez_console
         }
 
         public static void ImprimirPecasCapturadasPretas(PartidaDeXadrez partida)
-        {            
+        {
             Console.Write("Pretas: ");
             Console.Write("[");
             ConsoleColor corFonteAnterior = Console.ForegroundColor;
@@ -127,12 +127,12 @@ namespace xadrez_console
         public static void ImprimirPecasCapturadas(PartidaDeXadrez partida)
         {
             Console.WriteLine("Peças capturadas: ");
-            
-            ImprimirPecasCapturadasBrancas(partida);            
+
+            ImprimirPecasCapturadasBrancas(partida);
             ImprimirPecasCapturadasPretas(partida);
         }
 
-        public static void ImprimirPartida(PartidaDeXadrez partida, bool [,] movimentosPossiveis)
+        public static void ImprimirPartida(PartidaDeXadrez partida, bool[,] movimentosPossiveis)
         {
             ImprimirTabuleiro(partida.Tabuleiro, movimentosPossiveis);
 
@@ -141,6 +141,9 @@ namespace xadrez_console
             Console.WriteLine();
             Console.WriteLine("Turno: " + partida.Turno);
             Console.WriteLine("Aguardando jogada das peças: " + partida.JogadaAtual);
+
+            if (partida.EmXeque)
+                Console.WriteLine("XEQUE!");
         }
 
         public static void ImprimirPartida(PartidaDeXadrez partida)
