@@ -64,7 +64,7 @@ namespace xadrez
         public void MudarJogada()
         {
             JogadaAtual = JogadaAtual == Cor.Branca ? Cor.Preta : Cor.Branca;
-        }        
+        }
 
         public void DesfazerMovimento(Posicao origem, Posicao destino, Peca pecaCapturada)
         {
@@ -82,6 +82,7 @@ namespace xadrez
         private void DefinirPartidaEmXeque()
         {
             EmXeque = EstaEmXeque(Adversaria(JogadaAtual));
+            Terminada = EstaEmXequemate(Adversaria(JogadaAtual));
         }
 
         public void RealizarJogada(Posicao origem, Posicao destino)
@@ -96,16 +97,18 @@ namespace xadrez
 
             DefinirPartidaEmXeque();
 
-            MudarJogada();
-            Turno++;
+            if (!Terminada)
+            {
+                MudarJogada();
+                Turno++;
+            }
         }
 
         public void ValidarPosicaoDestino(Posicao origem, Posicao destino)
         {
             if (!Tabuleiro.peca(origem).PodeMoverPara(destino))
-            {
                 throw new TabuleiroException("Posição de destino inválida.");
-            }
+
         }
 
         private void ColocarPeca(Peca peca, char coluna, int linha)
@@ -147,6 +150,7 @@ namespace xadrez
         {
             ColocarPeca(new Rei(Tabuleiro, Cor.Branca), 'e', 1);
             ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'a', 1);
+            ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'h', 7);
 
             /*ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'a', 1);
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Branca), 'b', 1);
@@ -228,6 +232,40 @@ namespace xadrez
             }
 
             return false;
+        }
+
+        public bool EstaEmXequemate(Cor cor)
+        {
+            if (!EstaEmXeque(cor))
+                return false;
+
+            foreach (Peca p in PecasEmJogo(cor))
+            {
+                bool[,] movimentosPossiveis = p.RetornarMovimetacoesPossiveis();
+
+                for (int linha = 0; linha < Tabuleiro.Linhas; linha++)
+                {
+                    for (int coluna = 0; coluna < Tabuleiro.Colunas; coluna++)
+                    {
+                        if (movimentosPossiveis[linha, coluna])
+                        {
+                            Posicao origem = p.Posicao;
+                            Posicao destino = new Posicao(linha, coluna);
+                            
+                            Peca pecaCapturada = ExecutarMovimento(origem, destino);
+                            
+                            bool estaEmXeque = EstaEmXeque(cor);
+
+                            DesfazerMovimento(origem, destino, pecaCapturada);
+
+                            if (!estaEmXeque)
+                                return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

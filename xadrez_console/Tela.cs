@@ -132,6 +132,22 @@ namespace xadrez_console
             ImprimirPecasCapturadasPretas(partida);
         }
 
+        public static void ImprimirSituacaoPartida(PartidaDeXadrez partida)
+        {
+            if (partida.Terminada)
+            {
+                Console.WriteLine("XEQUEMATE!");
+                Console.WriteLine("Vencedor: " + partida.JogadaAtual);
+                Console.ReadLine();
+                return;
+            }
+
+            Console.WriteLine("Aguardando jogada das peças: " + partida.JogadaAtual);
+
+            if (partida.EmXeque)
+                Console.WriteLine("XEQUE!");
+        }
+
         public static void ImprimirPartida(PartidaDeXadrez partida, bool[,] movimentosPossiveis)
         {
             ImprimirTabuleiro(partida.Tabuleiro, movimentosPossiveis);
@@ -140,10 +156,8 @@ namespace xadrez_console
             ImprimirPecasCapturadas(partida);
             Console.WriteLine();
             Console.WriteLine("Turno: " + partida.Turno);
-            Console.WriteLine("Aguardando jogada das peças: " + partida.JogadaAtual);
 
-            if (partida.EmXeque)
-                Console.WriteLine("XEQUE!");
+            ImprimirSituacaoPartida(partida); 
         }
 
         public static void ImprimirPartida(PartidaDeXadrez partida)
