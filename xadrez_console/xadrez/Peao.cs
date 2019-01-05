@@ -4,10 +4,11 @@ namespace xadrez
 {
     class Peao : Peca
     {
+        public PartidaDeXadrez Partida { get; private set; }
 
-        public Peao(Tabuleiro tabuleiro, Cor cor) : base(tabuleiro, cor)
+        public Peao(PartidaDeXadrez partida, Cor cor) : base(partida.Tabuleiro, cor)
         {
-
+            Partida = partida;
         }
 
         private bool ExisteInimigo(Posicao pos)
@@ -77,6 +78,62 @@ namespace xadrez
                 movimentosPossiveis[pos.Linha, pos.Coluna] = true;
         }
 
+        private void DefinirEnPassantBrancaEsquerda(bool[,] movimentosPossiveis)
+        {
+            if (Posicao.Linha != 3)
+                return;
+
+            Posicao posicaoInimigo = new Posicao(Posicao.Linha, Posicao.Coluna - 1);
+
+            if (!Tabuleiro.PosicaoValida(posicaoInimigo))
+                return;
+
+            if (ExisteInimigo(posicaoInimigo) && Tabuleiro.peca(posicaoInimigo) == Partida.PecaVuneravelEnPassant)
+                movimentosPossiveis[posicaoInimigo.Linha - 1 , posicaoInimigo.Coluna] = true;
+        }
+
+        private void DefinirEnPassantBrancaDireita(bool[,] movimentosPossiveis)
+        {
+            if (Posicao.Linha != 3)
+                return;
+
+            Posicao posicaoInimigo = new Posicao(Posicao.Linha, Posicao.Coluna + 1);
+
+            if (!Tabuleiro.PosicaoValida(posicaoInimigo))
+                return;
+
+            if (ExisteInimigo(posicaoInimigo) && Tabuleiro.peca(posicaoInimigo) == Partida.PecaVuneravelEnPassant)
+                movimentosPossiveis[posicaoInimigo.Linha - 1, posicaoInimigo.Coluna] = true;
+        }
+
+        private void DefinirEnPassantPretaEsquerda(bool[,] movimentosPossiveis)
+        {
+            if (Posicao.Linha != 4)
+                return;
+
+            Posicao posicaoInimigo = new Posicao(Posicao.Linha, Posicao.Coluna - 1);
+
+            if (!Tabuleiro.PosicaoValida(posicaoInimigo))
+                return;
+
+            if (ExisteInimigo(posicaoInimigo) && Tabuleiro.peca(posicaoInimigo) == Partida.PecaVuneravelEnPassant)
+                movimentosPossiveis[posicaoInimigo.Linha + 1, posicaoInimigo.Coluna] = true;
+        }
+
+        private void DefinirEnPassantPretaDireita(bool[,] movimentosPossiveis)
+        {
+            if (Posicao.Linha != 4)
+                return;
+
+            Posicao posicaoInimigo = new Posicao(Posicao.Linha, Posicao.Coluna + 1);
+
+            if (!Tabuleiro.PosicaoValida(posicaoInimigo))
+                return;
+
+            if (ExisteInimigo(posicaoInimigo) && Tabuleiro.peca(posicaoInimigo) == Partida.PecaVuneravelEnPassant)
+                movimentosPossiveis[posicaoInimigo.Linha + 1, posicaoInimigo.Coluna] = true;
+        }
+
         public override bool[,] RetornarMovimetacoesPossiveis()
         {
             bool[,] movimentosPossiveis = new bool[Tabuleiro.Linhas, Tabuleiro.Colunas];
@@ -89,6 +146,8 @@ namespace xadrez
                 DefinirAvancar2Branca(pos, movimentosPossiveis);
                 DefinirCapturaEsquerdaBranca(pos, movimentosPossiveis);
                 DefinirCapturaDireitaBranca(pos, movimentosPossiveis);
+                DefinirEnPassantBrancaEsquerda(movimentosPossiveis);
+                DefinirEnPassantBrancaDireita(movimentosPossiveis);
             }
             else
             {
@@ -96,6 +155,8 @@ namespace xadrez
                 DefinirAvancar2Preta(pos, movimentosPossiveis);
                 DefinirCapturaEsquerdaPreta(pos, movimentosPossiveis);
                 DefinirCapturaDireitaPreta(pos, movimentosPossiveis);
+                DefinirEnPassantPretaEsquerda(movimentosPossiveis);
+                DefinirEnPassantPretaDireita(movimentosPossiveis);
             }
 
             return movimentosPossiveis;
