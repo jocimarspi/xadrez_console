@@ -48,6 +48,45 @@ namespace xadrez
             }
         }
 
+        private bool RoqueMenor(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            return pecaMovida is Rei && destino.Coluna == origem.Coluna + 2;
+        }
+
+        private void ExecutarMovimentoRoqueMenor(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            Posicao origemTorre = new Posicao(origem.Linha, origem.Coluna + 3);
+            Posicao destinoTorre = new Posicao(origem.Linha, origem.Coluna + 1);
+
+            Peca torre = Tabuleiro.RetirarPecao(origemTorre);
+            torre.IncrementarQuantidadeMovimentos();
+            Tabuleiro.ColocarPeca(torre, destinoTorre);
+        }        
+
+        private bool RoqueMaior(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            return pecaMovida is Rei && destino.Coluna == origem.Coluna - 2;
+        }
+
+        private void ExecutarMovimentoRoqueMaior(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            Posicao origemTorre = new Posicao(origem.Linha, origem.Coluna - 4);
+            Posicao destinoTorre = new Posicao(origem.Linha, origem.Coluna - 1);
+
+            Peca torre = Tabuleiro.RetirarPecao(origemTorre);
+            torre.IncrementarQuantidadeMovimentos();
+            Tabuleiro.ColocarPeca(torre, destinoTorre);
+        }        
+
+        private void ExecutarMovimentoRoque(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            if (RoqueMenor(pecaMovida, origem, destino))
+                ExecutarMovimentoRoqueMenor(pecaMovida, origem, destino);
+
+            if (RoqueMaior(pecaMovida, origem, destino))
+                ExecutarMovimentoRoqueMaior(pecaMovida, origem, destino);
+        }
+
         public Peca ExecutarMovimento(Posicao origem, Posicao destino)
         {
             Peca pecaMovida = Tabuleiro.RetirarPecao(origem);
@@ -58,12 +97,43 @@ namespace xadrez
             if (pecaCapturada != null)
                 capturadas.Add(pecaCapturada);
 
+            ExecutarMovimentoRoque(pecaMovida, origem, destino);
+
             return pecaCapturada;
         }
 
         public void MudarJogada()
         {
             JogadaAtual = JogadaAtual == Cor.Branca ? Cor.Preta : Cor.Branca;
+        }
+
+        private void DesfazerMovimentoRoqueMenor(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            Posicao origemTorre = new Posicao(origem.Linha, origem.Coluna + 3);
+            Posicao destinoTorre = new Posicao(origem.Linha, origem.Coluna + 1);
+
+            Peca torre = Tabuleiro.RetirarPecao(destinoTorre);
+            torre.IncrementarQuantidadeMovimentos();
+            Tabuleiro.ColocarPeca(torre, origemTorre);
+        }
+
+        private void DesfazerMovimentoRoqueMaior(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            Posicao origemTorre = new Posicao(origem.Linha, origem.Coluna - 4);
+            Posicao destinoTorre = new Posicao(origem.Linha, origem.Coluna - 1);
+
+            Peca torre = Tabuleiro.RetirarPecao(destinoTorre);
+            torre.IncrementarQuantidadeMovimentos();
+            Tabuleiro.ColocarPeca(torre, origemTorre);
+        }
+
+        private void DesfazerMovimentoRoque(Peca pecaMovida, Posicao origem, Posicao destino)
+        {
+            if (RoqueMenor(pecaMovida, origem, destino))
+                DesfazerMovimentoRoqueMenor(pecaMovida, origem, destino);
+
+            if (RoqueMaior(pecaMovida, origem, destino))
+                DesfazerMovimentoRoqueMaior(pecaMovida, origem, destino);
         }
 
         public void DesfazerMovimento(Posicao origem, Posicao destino, Peca pecaCapturada)
@@ -77,6 +147,8 @@ namespace xadrez
             }
 
             Tabuleiro.ColocarPeca(pecaNoDestino, origem);
+
+            DesfazerMovimentoRoque(pecaNoDestino, origem, destino);
         }
 
         private void DefinirPartidaEmXeque()
@@ -153,7 +225,7 @@ namespace xadrez
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Branca), 'b', 1);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Branca), 'c', 1);
             ColocarPeca(new Dama(Tabuleiro, Cor.Branca), 'd', 1);
-            ColocarPeca(new Rei(Tabuleiro, Cor.Branca), 'e', 1);
+            ColocarPeca(new Rei(this, Cor.Branca), 'e', 1);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Branca), 'f', 1);
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Branca), 'g', 1);
             ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'h', 1);
@@ -173,7 +245,7 @@ namespace xadrez
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Preta), 'b', 8);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Preta), 'c', 8);
             ColocarPeca(new Dama(Tabuleiro, Cor.Preta), 'd', 8);
-            ColocarPeca(new Rei(Tabuleiro, Cor.Preta), 'e', 8);
+            ColocarPeca(new Rei(this, Cor.Preta), 'e', 8);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Preta), 'f', 8);
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Preta), 'g', 8);
             ColocarPeca(new Torre(Tabuleiro, Cor.Preta), 'h', 8);
@@ -210,7 +282,7 @@ namespace xadrez
             return null;
         }
 
-        public bool EstaEmXeque(Cor cor)
+        private bool EstaEmXeque(Cor cor)
         {
             Peca Rei = RetornarRei(cor);
 
