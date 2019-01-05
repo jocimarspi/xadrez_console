@@ -148,11 +148,8 @@ namespace xadrez
 
         private void IniciarPecasBrancas()
         {
-            ColocarPeca(new Rei(Tabuleiro, Cor.Branca), 'e', 1);
+           
             ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'a', 1);
-            ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'h', 7);
-
-            /*ColocarPeca(new Torre(Tabuleiro, Cor.Branca), 'a', 1);
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Branca), 'b', 1);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Branca), 'c', 1);
             ColocarPeca(new Dama(Tabuleiro, Cor.Branca), 'd', 1);
@@ -168,14 +165,11 @@ namespace xadrez
             ColocarPeca(new Peao(Tabuleiro, Cor.Branca), 'e', 2);
             ColocarPeca(new Peao(Tabuleiro, Cor.Branca), 'f', 2);
             ColocarPeca(new Peao(Tabuleiro, Cor.Branca), 'g', 2);
-            ColocarPeca(new Peao(Tabuleiro, Cor.Branca), 'h', 2);*/
+            ColocarPeca(new Peao(Tabuleiro, Cor.Branca), 'h', 2);
         }
         private void IniciarPecasPretas()
         {
             ColocarPeca(new Torre(Tabuleiro, Cor.Preta), 'a', 8);
-            ColocarPeca(new Rei(Tabuleiro, Cor.Preta), 'e', 8);
-
-            /*ColocarPeca(new Torre(Tabuleiro, Cor.Preta), 'a', 8);
             ColocarPeca(new Cavalo(Tabuleiro, Cor.Preta), 'b', 8);
             ColocarPeca(new Bispo(Tabuleiro, Cor.Preta), 'c', 8);
             ColocarPeca(new Dama(Tabuleiro, Cor.Preta), 'd', 8);
@@ -191,7 +185,7 @@ namespace xadrez
             ColocarPeca(new Peao(Tabuleiro, Cor.Preta), 'e', 7);
             ColocarPeca(new Peao(Tabuleiro, Cor.Preta), 'f', 7);
             ColocarPeca(new Peao(Tabuleiro, Cor.Preta), 'g', 7);
-            ColocarPeca(new Peao(Tabuleiro, Cor.Preta), 'h', 7);*/
+            ColocarPeca(new Peao(Tabuleiro, Cor.Preta), 'h', 7);
         }
 
         private void IniciarTabuleiro()
