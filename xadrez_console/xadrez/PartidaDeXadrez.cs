@@ -216,9 +216,43 @@ namespace xadrez
                 PecaVuneravelEnPassant = pecaMovimentada;
         }
 
+        private bool PecaBrancaChegouAoFinal(Peca pecaMovida)
+        {
+            return pecaMovida.Cor == Cor.Branca && pecaMovida.Posicao.Linha == 0;                
+        }
+
+        private bool PecaPretaChegouAoFinal(Peca pecaMovida)
+        {
+            return (pecaMovida.Cor == Cor.Preta && pecaMovida.Posicao.Linha == 7);
+        }
+
+        private bool PeaoChegouAoFinal(Peca pecaMovida)
+        {
+            if (!(pecaMovida is Peao))
+                return false;
+
+            return PecaBrancaChegouAoFinal(pecaMovida) || PecaPretaChegouAoFinal(pecaMovida);
+        }
+
+        private void DefinirPromocaoPeao(Peca pecaMovida)
+        {
+            if (!PeaoChegouAoFinal(pecaMovida))
+                return;
+
+            Posicao posicaoPecaMovida = pecaMovida.Posicao;
+
+            pecaMovida = Tabuleiro.RetirarPecao(posicaoPecaMovida);
+            _pecas.Remove(pecaMovida);
+            Peca dama = new Dama(Tabuleiro, pecaMovida.Cor);
+            Tabuleiro.ColocarPeca(dama, posicaoPecaMovida);
+            _pecas.Add(dama);
+        }
+
         public void RealizarJogada(Posicao origem, Posicao destino)
         {
             Peca pecaCapturada = ExecutarMovimento(origem, destino);
+
+            DefinirPromocaoPeao(Tabuleiro.peca(destino));
 
             if (EstaEmXeque(JogadaAtual))
             {
@@ -295,7 +329,7 @@ namespace xadrez
             ColocarPeca(new Peao(this, Cor.Branca), 'b', 2);
             ColocarPeca(new Peao(this, Cor.Branca), 'c', 2);
             ColocarPeca(new Peao(this, Cor.Branca), 'd', 2);
-            ColocarPeca(new Peao(this, Cor.Branca), 'e', 2);
+            ColocarPeca(new Peao(this, Cor.Branca), 'e', 6);
             ColocarPeca(new Peao(this, Cor.Branca), 'f', 2);
             ColocarPeca(new Peao(this, Cor.Branca), 'g', 2);
             ColocarPeca(new Peao(this, Cor.Branca), 'h', 2);
@@ -314,7 +348,7 @@ namespace xadrez
             ColocarPeca(new Peao(this, Cor.Preta), 'a', 7);
             ColocarPeca(new Peao(this, Cor.Preta), 'b', 7);
             ColocarPeca(new Peao(this, Cor.Preta), 'c', 7);
-            ColocarPeca(new Peao(this, Cor.Preta), 'd', 7);
+            ColocarPeca(new Peao(this, Cor.Preta), 'd', 3);
             ColocarPeca(new Peao(this, Cor.Preta), 'e', 7);
             ColocarPeca(new Peao(this, Cor.Preta), 'f', 7);
             ColocarPeca(new Peao(this, Cor.Preta), 'g', 7);
